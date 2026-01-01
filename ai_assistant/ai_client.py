@@ -14,8 +14,8 @@ To switch providers, modify the ACTIVE_PROVIDER variable in .env file.
 """
 
 from typing import Optional
-from .base import BaseAIClient
-from .config import config
+from base import BaseAIClient
+from config import config
 
 # =============================================================================
 # PROVIDER CONFIGURATION - Read from .env via config module
@@ -37,10 +37,10 @@ def _get_provider_class(provider_name: str):
     This avoids import errors if a provider's dependencies aren't installed.
     """
     if provider_name == "gemini":
-        from .gemini_provider import GeminiClient
+        from gemini_provider import GeminiClient
         return GeminiClient
     elif provider_name == "groq":
-        from .groq_provider import GroqClient
+        from groq_provider import GroqClient
         return GroqClient
     else:
         raise ValueError(

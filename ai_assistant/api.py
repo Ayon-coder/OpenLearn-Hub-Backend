@@ -11,14 +11,14 @@ from typing import Optional
 import traceback
 import sys
 
-from .config import config
-from .demo import get_mentor_demo_response, get_concept_mirror_demo_response
+from config import config
+from demo import get_mentor_demo_response, get_concept_mirror_demo_response
 
 # Import the AI client factory
 def _get_ai_client():
     """Lazy import to avoid circular dependencies."""
     try:
-        from .ai_client import get_ai_client
+        from ai_client import get_ai_client
         return get_ai_client()
     except Exception as e:
         print(f"[ERROR] Failed to get AI client: {e}")
@@ -293,6 +293,7 @@ def run_server(
     )
 
 
+
 # Allow running directly: python -m ai_assistant.api
 if __name__ == "__main__":
     print("=" * 60)
@@ -307,3 +308,6 @@ if __name__ == "__main__":
     print("=" * 60)
     
     run_server()
+
+# Expose app for Vercel / WSGI
+app = create_app()
