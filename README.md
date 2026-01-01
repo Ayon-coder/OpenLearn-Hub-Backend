@@ -1,153 +1,103 @@
-# OpenLearn-Hub Backend
+<div align="center">
 
-Express.js backend API for OpenLearn-Hub educational platform. Features Firebase Firestore integration, admin authentication, user management, and email notifications.
+# ⚙️ OpenLearn Hub - Backend
 
-## 🚀 Features
+### **The Robust API Infrastructure for OpenLearn Hub**
 
-- **🔐 Authentication** - User registration, login, and admin authentication
-- **👤 User Management** - Admin approval system for new users
-- **📧 Email Service** - Nodemailer integration for notifications
-- **🔥 Firebase** - Firestore database integration
-- **🌐 CORS** - Configured for frontend integration
-- **📊 Health Checks** - Built-in health monitoring endpoints
+[Features](#-features) • [Getting Started](#-getting-started) • [Tech Stack](#-tech-stack) • [API Reference](#-api-reference)
 
-## 🛠️ Tech Stack
+![Node.js](https://img.shields.io/badge/Node.js-18.x-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-4.x-000000?style=for-the-badge&logo=express&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-Admin-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Nodemailer](https://img.shields.io/badge/Nodemailer-Email-007ACC?style=for-the-badge&logo=minutemailer&logoColor=white)
 
-- **Express.js** - Web Framework
-- **Firebase Admin SDK** - Database & Authentication
-- **Nodemailer** - Email Service
-- **CORS** - Cross-Origin Resource Sharing
-- **dotenv** - Environment Configuration
-
-## 📦 Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/openlearn-hub-backend.git
-
-# Navigate to the project directory
-cd openlearn-hub-backend
-
-# Install dependencies
-npm install
-
-# Create environment file
-cp .env.example .env
-
-# Start development server
-npm run dev
-```
-
-## ⚙️ Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-# Server Configuration
-PORT=5000
-FRONTEND_URL=http://localhost:5173
-
-# Firebase Configuration
-# Option 1: Base64 encoded service account (recommended for deployment)
-FIREBASE_CRED_BASE64=your_base64_encoded_firebase_credentials
-
-# Admin Credentials
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=your_secure_password
-
-# JWT Secret
-JWT_SECRET=your_super_secret_jwt_key_here
-
-# Email Configuration (Gmail SMTP)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-EMAIL_FROM=OpenLearn Hub <noreply@openlearnhub.com>
-```
-
-### Firebase Setup
-
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Create a new project or use existing one
-3. Go to Project Settings > Service Accounts
-4. Generate new private key
-5. Convert to base64: 
-   ```bash
-   base64 -i serviceAccountKey.json
-   ```
-6. Set `FIREBASE_CRED_BASE64` environment variable
-
-## 🚀 Deployment on Vercel
-
-### Option 1: One-Click Deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/openlearn-hub-backend)
-
-### Option 2: Manual Deployment
-
-1. Push your code to GitHub
-2. Import the repository in Vercel Dashboard
-3. Configure environment variables (see above)
-4. Deploy!
-
-### Environment Variables on Vercel
-
-Set these in your Vercel project settings:
-
-| Variable | Description |
-|----------|-------------|
-| `FIREBASE_CRED_BASE64` | Base64 encoded Firebase service account |
-| `FRONTEND_URL` | Your deployed frontend URL |
-| `ADMIN_USERNAME` | Admin login username |
-| `ADMIN_PASSWORD` | Admin login password |
-| `JWT_SECRET` | Secret key for JWT tokens |
-| `EMAIL_USER` | Gmail address for sending emails |
-| `EMAIL_PASS` | Gmail app password |
-
-## 📜 Available Scripts
-
-```bash
-# Development server (with watch mode)
-npm run dev
-
-# Production server
-npm start
-```
-
-## 🔗 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | API info |
-| `GET` | `/health` | Health check |
-| `POST` | `/api/auth/register` | User registration |
-| `POST` | `/api/auth/login` | User login |
-| `POST` | `/api/auth/admin/login` | Admin login |
-| `GET` | `/api/admin/users` | Get all users (admin) |
-| `PATCH` | `/api/admin/users/:id/approve` | Approve user (admin) |
-
-## 📁 Project Structure
-
-```
-backend/
-├── config/          # Firebase configuration
-├── middleware/      # Auth middleware
-├── routes/          # API routes
-├── services/        # Business logic & email service
-├── server.js        # Entry point
-├── vercel.json      # Vercel configuration
-└── package.json
-```
-
-## 🔗 Related
-
-- [OpenLearn-Hub Frontend](https://github.com/your-username/openlearn-hub-frontend) - React Frontend
-
-## 📄 License
-
-MIT License - feel free to use this project for your own purposes.
+</div>
 
 ---
 
-Built with ❤️ for the love of learning
+## ☀️ Overview
+
+The **OpenLearn Hub Backend** serves as the backbone of the platform, providing secure, scalable, and real-time APIs. It leverages the power of **Node.js** and **Express**, integrated with **Firebase Admin SDK** for robust authentication and Firestore database management, covering everything from user roles to AI-powered features.
+
+---
+
+## ✨ Features
+
+### 🔒 Secure Authentication & User Management
+*   **Role-Based Access Control (RBAC):** Secure middleware to handle permissions for Students, Teachers, and Admins.
+*   **Firebase Auth Integration:** Seamless and secure user verification via Firebase Admin SDK.
+
+### 🤖 AI-Powered Capabilities
+*   **AI Assistant Integration:** Connects with Gemini/Groq APIs to provide intelligent responses and coding assistance.
+*   **Complexity Analysis:** Backend support for analyzing code complexity and generating feedback.
+
+### 📧 Communication Ecosystem
+*   **Automated Emails:** Logic for sending welcome emails, notifications, and verification links using **Nodemailer**.
+*   **Admin Notifications:** Real-time alerts for administrative actions.
+
+### 🛡️ Administration Dashboard
+*   **User Approvals:** Endpoints for admins to approve or reject instructor applications.
+*   **Content Management:** APIs for managing community notes, courses, and resources.
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+| :--- | :--- |
+| **Node.js** | Runtime Environment |
+| **Express.js** | Web Framework |
+| **Firebase Admin** | Database (Firestore) & Auth |
+| **Nodemailer** | Email Service |
+| **Dotenv** | Configuration Management |
+| **Cors** | Cross-Origin Resource Sharing |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Ayon-coder/OpenLearn-Hub-Backend.git
+cd OpenLearn-Hub-Backend
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Environment Setup
+Create a `.env` file in the root directory and add the following:
+```env
+PORT=5000
+FRONTEND_URL=http://localhost:5173
+FIREBASE_CRED_BASE64=your_base64_encoded_service_account
+# ... (see .env.example for full list)
+```
+
+### 4. Run the Server
+```bash
+# Development mode
+npm run dev
+
+# Production
+npm start
+```
+
+---
+
+## 🔗 API Reference
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Register a new user |
+| `POST` | `/api/auth/login` | User login |
+| `GET` | `/api/admin/users` | Get all users (Admin only) |
+| `PATCH` | `/api/admin/users/:id/approve` | Approve a user (Admin only) |
+
+<br>
+
+<div align="center">
+  <p>Made with ❤️ for OpenLearn Hub</p>
+</div>
