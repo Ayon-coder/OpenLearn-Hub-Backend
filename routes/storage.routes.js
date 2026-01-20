@@ -41,7 +41,12 @@ router.get('/user/:userId', async (req, res) => {
         const data = await githubStorageService.getUserData(userId);
         res.json(data);
     } catch (error) {
-        res.status(500).json({ error: `Failed to fetch data for user ${req.params.userId}` });
+        console.error(`Error fetching user ${req.params.userId}:`, error);
+        res.status(500).json({
+            error: `Failed to fetch data for user ${req.params.userId}`,
+            details: error.message,
+            code: error.status || 500
+        });
     }
 });
 
@@ -163,7 +168,10 @@ router.post('/user/:userId', async (req, res) => {
         res.json({ success: true, data: updated });
     } catch (error) {
         console.error('❌ Failed to update user profile:', error.message || error);
-        res.status(500).json({ error: `Failed to update data for user ${req.params.userId}: ${error.message}` });
+        res.status(500).json({
+            error: `Failed to update data for user ${req.params.userId}`,
+            details: error.message
+        });
     }
 });
 
