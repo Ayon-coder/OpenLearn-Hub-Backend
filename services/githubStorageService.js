@@ -31,11 +31,21 @@ export const githubStorageService = {
                 throw new Error('Path points to a directory, not a file');
             }
 
-            const content = decodeContent(response.data.content);
-            return {
-                data: JSON.parse(content),
-                sha: response.data.sha // Needed for updates
-            };
+            if (content.trim().length === 0) {
+                console.warn(`File ${path} is empty, returning null`);
+                return null;
+            }
+
+            try {
+                return {
+                    data: JSON.parse(content),
+                    sha: response.data.sha // Needed for updates
+                };
+            } catch (parseError) {
+                console.warn(`File ${path} contains invalid JSON, treating as missing/corrupted:`, parseError.message);
+                // Return null so we can overwrite/regenerate it
+                return null;
+            }
         } catch (error) {
             if (error.status === 404) {
                 return null; // File doesn't exist
