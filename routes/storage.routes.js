@@ -97,4 +97,49 @@ router.get('/toon', async (req, res) => {
     }
 });
 
+// POST /api/storage/dedupe - Maintenance route to remove duplicates
+router.post('/dedupe', async (req, res) => {
+    try {
+        console.log('🧹 Starting deduplication...');
+        const path = 'data/global/contents.json';
+        const current = await githubStorageService.getFile(path);
+
+        if (!current || !current.data) {
+            return res.json({ message: 'No global content found to dedupe.' });
+        }
+
+        const originalData = current.data;
+        const seen = new Set();
+        const cleanData = [];
+
+        // Keep only the first occurrence of each ID
+        for (const item of originalData) {
+            if (!seen.has(item.id)) {
+                seen.add(item.id);
+                cleanData.push(item);
+            }
+        }
+
+        const removedCount = originalData.length - cleanData.length;
+
+        if (removedCount === 0) {
+            console.log('✅ No duplicates found.');
+            return res.json({ success: true, message: 'No duplicates found', count: cleanData.length });
+        }
+
+        console.log(`⚠️ Found ${removedCount} duplicates. Cleaning up...`);
+        await githubStorageService.saveFile(path, cleanData, `Cleanup: Removed ${removedCount} duplicate entries`, current.sha);
+
+        res.json({
+            success: true,
+            message: `Removed ${removedCount} duplicates`,
+            originalCount: originalData.length,
+            newCount: cleanData.length
+        });
+    } catch (error) {
+        console.error('❌ Deduplication failed:', error);
+        res.status(500).json({ error: 'Deduplication failed', details: error.message });
+    }
+});
+
 export default router;
