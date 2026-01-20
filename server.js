@@ -103,9 +103,11 @@ try {
 // Export for Vercel
 export default app;
 
-// Only start server if running directly (Local Development)
-if (process.argv[1] === new URL(import.meta.url).pathname) {
-    const PORT = process.env.PORT || 5000;
+// Start server for local development
+// In Vercel, this won't run because Vercel imports the app directly
+const isVercel = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
+
+if (!isVercel) {
     app.listen(PORT, () => {
         console.log(`\n✅ Server running on http://localhost:${PORT}`);
         console.log(`📡 Frontend URL: ${FRONTEND_URL}`);
