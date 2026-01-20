@@ -35,12 +35,20 @@ app.use((req, res, next) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-    res.json({
+    // Basic connectivity check
+    const healthStatus = {
         status: 'healthy',
         timestamp: new Date().toISOString(),
         service: 'openlearn-hub-backend',
-        database: 'firestore'
-    });
+        environment: process.env.NODE_ENV || 'development',
+        memory: process.memoryUsage(),
+        uptime: process.uptime()
+    };
+
+    // Log health check access for debugging quota issues
+    console.log(`[Health Check] Status 200 OK - ${healthStatus.timestamp}`);
+
+    res.json(healthStatus);
 });
 
 // API Routes
@@ -81,10 +89,13 @@ app.use((err, req, res, next) => {
 
 // Initialize Firebase immediately (Required for Vercel Serverless)
 try {
+    console.log('🔄 Attempting Firebase initialization...');
     initializeFirebase();
-    console.log('✅ Firebase initialized');
+    console.log('✅ Firebase initialized successfully');
 } catch (error) {
-    console.error('❌ Firebase initialization failed:', error);
+    console.error('❌ CRITICAL: Firebase initialization failed:', error);
+    // Do not throw here to allow health check to pass even if DB fails
+    // This distinguishes app crash from DB connection error
 }
 
 // ... routes ...
