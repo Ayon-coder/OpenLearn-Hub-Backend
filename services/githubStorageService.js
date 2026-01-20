@@ -142,10 +142,18 @@ export const githubStorageService = {
         const existingData = current ? current.data : [];
         const sha = current ? current.sha : null;
 
-        // Prepend new item
-        const newData = [contentItem, ...existingData];
+        // Prepend new item, avoiding duplicates by ID
+        const isDuplicate = existingData.some(item => item.id === contentItem.id);
 
-        await this.saveFile(path, newData, `Add new global content: ${contentItem.title}`, sha);
+        let newData;
+        if (isDuplicate) {
+            console.log(`Content ${contentItem.id} already exists in global storage, updating it.`);
+            newData = existingData.map(item => item.id === contentItem.id ? contentItem : item);
+        } else {
+            newData = [contentItem, ...existingData];
+        }
+
+        await this.saveFile(path, newData, `Add/Update global content: ${contentItem.title}`, sha);
         return newData;
     }
 };
