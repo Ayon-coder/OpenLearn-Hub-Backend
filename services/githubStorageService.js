@@ -31,7 +31,9 @@ export const githubStorageService = {
                 throw new Error('Path points to a directory, not a file');
             }
 
-            if (content.trim().length === 0) {
+            const content = decodeContent(response.data.content);
+
+            if (!content || content.trim().length === 0) {
                 console.warn(`File ${path} is empty, returning null`);
                 return null;
             }
