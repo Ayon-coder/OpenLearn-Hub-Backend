@@ -41,9 +41,8 @@ class GroqClient(BaseAIClient):
         "llama-3.3-70b-versatile",
         "llama-3.1-8b-instant",
         "llama-3.2-11b-vision-preview",
-        "mixtral-8x7b-32768",
         "gemma2-9b-it",
-        "meta-llama/llama-4-scout-17b-16e-instruct", # User specified
+        "meta-llama/llama-4-scout-17b-16e-instruct",
         "compound-mini",  # Compound AI model
         "compound-beta",  # Compound AI model
     ]

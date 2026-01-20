@@ -43,6 +43,7 @@ The **OpenLearn Hub Backend** is the robust backbone of the platform, providing 
 ### 🤖 AI-Powered Services
 - **Mentor Mode**: Interactive AI chat for learning assistance
 - **Concept Mirror**: AI-powered analysis of user explanations
+- **Curriculum Generator**: AI-generated personalized learning paths with Groq
 - **Multi-Provider Support**: Seamlessly switch between Gemini and Groq
 - **Demo Mode**: Fallback responses when API keys are unavailable
 
@@ -94,9 +95,11 @@ backend/
 ├── routes/
 │   ├── auth.routes.js          # Authentication endpoints
 │   └── admin.routes.js         # Admin management endpoints
-├── services/
-│   ├── userService.js          # User CRUD operations
-│   └── emailService.js         # Email notification service
+│   ├── services/
+│   │   ├── userService.js          # User CRUD operations
+│   │   ├── emailService.js         # Email notification service
+│   │   ├── curriculumService.js    # Curriculum CRUD with Firestore
+│   │   └── curriculumPrompt.js     # AI prompt for curriculum generation
 ├── ai_assistant/               # Python AI Backend
 │   ├── api.py                  # Flask REST API
 │   ├── ai_client.py            # AI provider client factory
@@ -270,6 +273,31 @@ POST /api/auth/login
 | `PATCH` | `/users/:userId/approve` | Approve a user |
 | `GET` | `/stats` | Get dashboard statistics |
 
+### Curriculum Routes (`/api/curriculum`)
+
+| Method | Endpoint | Description |
+|:---|:---|:---|
+| `POST` | `/generate` | Generate AI curriculum |
+| `GET` | `/:id` | Get curriculum by ID |
+| `GET` | `/user/:userId` | Get user's saved curricula |
+| `DELETE` | `/:id` | Delete curriculum |
+| `PATCH` | `/:id/progress` | Update learning progress |
+
+#### Generate Curriculum
+```json
+POST /api/curriculum/generate
+{
+  "userId": "user123",
+  "learning_goal": "Machine Learning",
+  "current_level": "Beginner",
+  "focus_areas": ["Python", "Neural Networks"],
+  "prior_knowledge": "Basic Python programming",
+  "time_commitment": "10-20 hours/week",
+  "learning_objectives": "Build ML models",
+  "learning_style": "hands-on"
+}
+```
+
 ---
 
 ## 🤖 AI Assistant
@@ -310,8 +338,8 @@ POST /analyze
 
 | Provider | Models | Notes |
 |:---|:---|:---|
-| **Gemini** | gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash | Recommended |
-| **Groq** | llama-3.3-70b-versatile, llama-3.1-8b-instant, mixtral-8x7b-32768 | Fast inference |
+| **Gemini** | gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash | Recommended for chat |
+| **Groq** | llama-3.3-70b-versatile, llama-3.1-8b-instant, meta-llama/llama-4-scout-17b-16e-instruct | Used for curriculum generation |
 
 ---
 
@@ -402,7 +430,6 @@ Set all required environment variables in the Vercel dashboard:
 ## 📄 Related Links
 
 - **Frontend Repository**: [OpenLearn-Hub Frontend](../frontend/README.md)
-- **Live Demo**: [Coming Soon]
 
 ---
 

@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import { initializeFirebase } from './config/firebase.config.js';
 import authRoutes from './routes/auth.routes.js';
 import adminRoutes from './routes/admin.routes.js';
+import curriculumRoutes from './routes/curriculum.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -45,6 +46,7 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/curriculum', curriculumRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -54,7 +56,8 @@ app.get('/', (req, res) => {
         endpoints: {
             health: '/health',
             auth: '/api/auth',
-            admin: '/api/admin'
+            admin: '/api/admin',
+            curriculum: '/api/curriculum'
         }
     });
 });
