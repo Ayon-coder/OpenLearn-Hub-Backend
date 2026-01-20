@@ -136,15 +136,18 @@ router.post('/generate', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
+        console.log(`[DEBUG] Fetching curriculum ID: ${id}`);
 
         const curriculum = await getCurriculumById(id);
 
         if (!curriculum) {
+            console.log(`[DEBUG] Curriculum ID ${id} NOT FOUND in DB.`);
             return res.status(404).json({
                 error: 'Not found',
                 message: 'Curriculum not found'
             });
         }
+        console.log(`[DEBUG] Found curriculum ID ${id}`);
 
         res.json({
             success: true,

@@ -44,6 +44,7 @@ The **OpenLearn Hub Backend** is the robust backbone of the platform, providing 
 - **Mentor Mode**: Interactive AI chat for learning assistance
 - **Concept Mirror**: AI-powered analysis of user explanations
 - **Curriculum Generator**: AI-generated personalized learning paths with Groq
+- **Persistence Layer**: Save, retrieve, and track progress of generated curricula
 - **Multi-Provider Support**: Seamlessly switch between Gemini and Groq
 - **Demo Mode**: Fallback responses when API keys are unavailable
 
@@ -279,7 +280,7 @@ POST /api/auth/login
 |:---|:---|:---|
 | `POST` | `/generate` | Generate AI curriculum |
 | `GET` | `/:id` | Get curriculum by ID |
-| `GET` | `/user/:userId` | Get user's saved curricula |
+| `GET` | `/user/:userId` | **[NEW]** Get all saved curricula for a user |
 | `DELETE` | `/:id` | Delete curriculum |
 | `PATCH` | `/:id/progress` | Update learning progress |
 
