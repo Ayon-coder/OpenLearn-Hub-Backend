@@ -8,10 +8,13 @@ import { buildCurriculumPrompt, getDefaultFormData } from '../services/curriculu
 import {
     saveCurriculum,
     getCurriculumById,
+    getCurriculumByIdForUser,
     getCurriculaByUser,
     deleteCurriculum,
-    updateCurriculumProgress
+    updateCurriculumProgress,
+    validateCurriculumResult
 } from '../services/curriculumService.js';
+import { getToon, formatToonForPrompt, regenerateToon } from '../services/toonService.js';
 
 const router = express.Router();
 
@@ -54,11 +57,21 @@ router.post('/generate', async (req, res) => {
         // Merge with defaults
         const completeFormData = { ...getDefaultFormData(), ...formData };
 
-        // Build the prompt
-        const prompt = buildCurriculumPrompt(completeFormData);
+        // Fetch the toon (content catalog) for LLM context
+        let toon = await getToon();
+        if (!toon) {
+            console.log('📦 Toon not found, regenerating...');
+            toon = await regenerateToon();
+        }
+        const toonContext = formatToonForPrompt(toon);
+
+        // Build the prompt with toon context
+        const basePrompt = buildCurriculumPrompt(completeFormData);
+        const prompt = `${toonContext}\n\n---\n\n${basePrompt}`;
 
         console.log(`📚 Generating curriculum for user: ${userId}`);
         console.log(`📖 Learning goal: ${formData.learning_goal}`);
+        console.log(`📦 Toon context: ${toon.totalAvailable} items loaded`);
 
         // Call Groq API
         const groqResponse = await fetch(GROQ_API_URL, {
@@ -109,10 +122,14 @@ router.post('/generate', async (req, res) => {
             throw new Error('Failed to parse curriculum data from AI response');
         }
 
-        // Save to Firestore
-        const savedCurriculum = await saveCurriculum(userId, completeFormData, curriculumData);
+        // Validate and mark available vs alternative content
+        const validatedCurriculumData = await validateCurriculumResult(curriculumData);
+        console.log('✅ Validation complete: Matched against platform content');
 
-        console.log(`✅ Curriculum generated and saved: ${savedCurriculum.id}`);
+        // Save to GitHub
+        const savedCurriculum = await saveCurriculum(userId, completeFormData, validatedCurriculumData);
+
+        console.log(`✅ Curriculum generated and saved to GitHub: ${savedCurriculum.id}`);
 
         res.json({
             success: true,
@@ -125,39 +142,6 @@ router.post('/generate', async (req, res) => {
         res.status(500).json({
             error: 'Generation failed',
             message: error.message || 'Failed to generate curriculum'
-        });
-    }
-});
-
-/**
- * GET /api/curriculum/:id
- * Get a specific curriculum by ID
- */
-router.get('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        console.log(`[DEBUG] Fetching curriculum ID: ${id}`);
-
-        const curriculum = await getCurriculumById(id);
-
-        if (!curriculum) {
-            console.log(`[DEBUG] Curriculum ID ${id} NOT FOUND in DB.`);
-            return res.status(404).json({
-                error: 'Not found',
-                message: 'Curriculum not found'
-            });
-        }
-        console.log(`[DEBUG] Found curriculum ID ${id}`);
-
-        res.json({
-            success: true,
-            curriculum
-        });
-    } catch (error) {
-        console.error('Get curriculum error:', error);
-        res.status(500).json({
-            error: 'Fetch failed',
-            message: error.message
         });
     }
 });
@@ -179,6 +163,39 @@ router.get('/user/:userId', async (req, res) => {
         });
     } catch (error) {
         console.error('Get user curricula error:', error);
+        res.status(500).json({
+            error: 'Fetch failed',
+            message: error.message
+        });
+    }
+});
+
+/**
+ * GET /api/curriculum/:userId/:id
+ * Get a specific curriculum by ID for a user
+ */
+router.get('/:userId/:id', async (req, res) => {
+    try {
+        const { userId, id } = req.params;
+        console.log(`[DEBUG] Fetching curriculum ID: ${id} for user: ${userId}`);
+
+        const curriculum = await getCurriculumByIdForUser(userId, id);
+
+        if (!curriculum) {
+            console.log(`[DEBUG] Curriculum ID ${id} NOT FOUND.`);
+            return res.status(404).json({
+                error: 'Not found',
+                message: 'Curriculum not found'
+            });
+        }
+        console.log(`[DEBUG] Found curriculum ID ${id}`);
+
+        res.json({
+            success: true,
+            curriculum
+        });
+    } catch (error) {
+        console.error('Get curriculum error:', error);
         res.status(500).json({
             error: 'Fetch failed',
             message: error.message
@@ -224,7 +241,14 @@ router.delete('/:id', async (req, res) => {
 router.patch('/:id/progress', async (req, res) => {
     try {
         const { id } = req.params;
-        const { progress } = req.body;
+        const { progress, userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({
+                error: 'Missing user ID',
+                message: 'User ID is required to update progress'
+            });
+        }
 
         if (!progress) {
             return res.status(400).json({
@@ -233,7 +257,7 @@ router.patch('/:id/progress', async (req, res) => {
             });
         }
 
-        const updatedCurriculum = await updateCurriculumProgress(id, progress);
+        const updatedCurriculum = await updateCurriculumProgress(id, userId, progress);
 
         res.json({
             success: true,

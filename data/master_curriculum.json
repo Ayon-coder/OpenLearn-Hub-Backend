@@ -1,0 +1,95 @@
+{
+    "version": "1.0.0",
+    "last_updated": "2026-01-20",
+    "domain": "Computer Science",
+    "cards": [
+        {
+            "id": "intro-python",
+            "topic": "Python Basics",
+            "difficulty": "Beginner",
+            "tags": [
+                "python",
+                "basics",
+                "programming"
+            ],
+            "prerequisites": [],
+            "intent": "Learn the fundamental syntax and structure of Python.",
+            "estimated_hours": 5
+        },
+        {
+            "id": "python-control-flow",
+            "topic": "Control Flow in Python",
+            "difficulty": "Beginner",
+            "tags": [
+                "python",
+                "logic",
+                "basics"
+            ],
+            "prerequisites": [
+                "Python Basics"
+            ],
+            "intent": "Understand loops and conditional statements in Python.",
+            "estimated_hours": 4
+        },
+        {
+            "id": "python-functions",
+            "topic": "Python Functions",
+            "difficulty": "Intermediate",
+            "tags": [
+                "python",
+                "functions",
+                "modular-coding"
+            ],
+            "prerequisites": [
+                "Control Flow in Python"
+            ],
+            "intent": "Learn how to define and use functions for reusable code.",
+            "estimated_hours": 6
+        },
+        {
+            "id": "react-basics",
+            "topic": "React Fundamentals",
+            "difficulty": "Beginner",
+            "tags": [
+                "frontend",
+                "react",
+                "javascript"
+            ],
+            "prerequisites": [
+                "HTML/CSS",
+                "JavaScript Basics"
+            ],
+            "intent": "Understand the core concepts of components and JSX.",
+            "estimated_hours": 8
+        },
+        {
+            "id": "react-state",
+            "topic": "React State Management",
+            "difficulty": "Intermediate",
+            "tags": [
+                "frontend",
+                "react",
+                "hooks"
+            ],
+            "prerequisites": [
+                "React Fundamentals"
+            ],
+            "intent": "Master the useState and useEffect hooks.",
+            "estimated_hours": 10
+        },
+        {
+            "id": "data-structures-arrays",
+            "topic": "Arrays & Strings",
+            "difficulty": "Beginner",
+            "tags": [
+                "data-structures",
+                "cs-fundamentals"
+            ],
+            "prerequisites": [
+                "Programming Basics"
+            ],
+            "intent": "Learn the properties and operations of arrays and strings.",
+            "estimated_hours": 5
+        }
+    ]
+}
