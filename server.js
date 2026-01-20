@@ -79,32 +79,24 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Initialize Firebase and start server
-async function startServer() {
-    try {
-        console.log('🚀 Starting OpenLearn-Hub Backend...\n');
-
-        // Initialize Firebase
-        await initializeFirebase();
-
-        // Start Express server
-        app.listen(PORT, () => {
-            console.log(`\n✅ Server running on http://localhost:${PORT}`);
-            console.log(`📡 Frontend URL: ${FRONTEND_URL}`);
-            console.log(`🏥 Health check: http://localhost:${PORT}/health`);
-            console.log('\n📋 Available Routes:');
-            console.log('   POST /api/auth/register - Register new user');
-            console.log('   POST /api/auth/login - User login');
-            console.log('   POST /api/auth/admin/login - Admin login');
-            console.log('   GET  /api/admin/users - Get all users (admin)');
-            console.log('   PATCH /api/admin/users/:id/approve - Approve user (admin)');
-            console.log('\n🔥 Firestore Database ready!\n');
-        });
-    } catch (error) {
-        console.error('❌ Failed to start server:', error.message);
-        process.exit(1);
-    }
+// Initialize Firebase immediately (Required for Vercel Serverless)
+try {
+    initializeFirebase();
+    console.log('✅ Firebase initialized');
+} catch (error) {
+    console.error('❌ Firebase initialization failed:', error);
 }
 
-// Start the server
-startServer();
+// ... routes ...
+
+// Export for Vercel
+export default app;
+
+// Only start server if running directly (Local Development)
+if (process.argv[1] === new URL(import.meta.url).pathname) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`\n✅ Server running on http://localhost:${PORT}`);
+        console.log(`📡 Frontend URL: ${FRONTEND_URL}`);
+    });
+}
