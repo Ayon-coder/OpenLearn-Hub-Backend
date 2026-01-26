@@ -430,11 +430,5 @@ Set all required environment variables in the Vercel dashboard:
 
 ## 📄 Related Links
 
-- **Frontend Repository**: [OpenLearn-Hub Frontend](../frontend/README.md)
+- **Frontend Repository**: https://github.com/Ayon-coder/OpenLearn-Hub-Frontend.git
 
----
-
-<div align="center">
-  <p>Made with ❤️ for OpenLearn Hub</p>
-  <p>© 2025 OpenLearn Hub. All rights reserved.</p>
-</div>
